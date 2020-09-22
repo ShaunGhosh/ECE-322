@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Put your code here
+# You may only use the following external programs: ls, echo, awk, cat, grep, sort, wc, bc
+
+ls submissions | 
+
+awk 'BEGIN{ 
+while(( getline line <"input.txt")>0) {
+tindex=match(line,/[0-9]+/);
+value=substr(line,tindex);
+key=substr(line,0,tindex-2);
+keyword[key]=value;
+	}
+}
+{
+Total=0;
+for(key in keyword){
+cmd = "grep -o -i \""key"\" submissions/" $0 " | wc -l";
+cmd | getline count;
+
+Total+=keyword[key]*count;
+}
+Candidates[$0]=Total;
+}
+END{
+n=asort(Candidates,sortedCandidates);
+for(i=n;i>=1;i--){
+	for(j in Candidates){
+		if(sortedCandidates[i]==Candidates[j]){
+			print Candidates[j], j;
+			delete Candidates[j];
+			}
+		}
+	}
+}
+
+'
