@@ -84,6 +84,18 @@ char check_add_book(struct player* target){
 	return ' ';//Space char will indicate no books!
 }
 
+int search(struct player* target, char rank){
+	struct hand* iterator = (*target).card_list;
+	if(iterator == NULL) { return 0;}
+	while ((*iterator).top.rank[1] != rank){
+		iterator = (*iterator).next;
+		if (iterator == NULL){return 0;}
+		}
+	free(iterator);	
+	return 1;
+	
+}
+
 int gameover(struct player* target){
 	if((*target).book[6] != '\0'){
 		return 1;
@@ -107,7 +119,7 @@ void print_hand(struct player* target){
 }
 */
 
-int main(){
+int main(int argc, char *argv[]){
 	//These will be declared in an initialization function!
 	//The parameters of these pointers need to be passed to the function prope
 
@@ -140,12 +152,12 @@ int main(){
 	}
 */
 	struct player Paige;
-	int i;
-	for(i=0; i<7;i++){
-    Paige.book[i] = '1';
-	}
-    printf("%d",gameover(&Paige));
-
+	
+	struct card PW;
+	PW.suit = 'C';
+	PW.rank[1] = '2';
+	add_card(&Paige, &PW);
+	printf("%d",search(&Paige,'3'));             
 	
 
 }
