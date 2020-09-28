@@ -56,4 +56,11 @@ int main(int args, char* argv[])
 
 	//Joe Mitchell [END]
 	//call user play function
+
+	printf("resetting player: %d", reset_player(&user));
+	printf("new user's hand after resetting: ");
+	print_hand(&user);
+	printf("\nUser Books after resetting: ");
+	print_books(&user);
+
 }

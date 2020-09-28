@@ -126,17 +126,26 @@ char check_add_book(struct player* target){
 
 //Shaun Ghosh
 int transfer_cards(struct player* src, struct player* dest, char rank){
+
+	//iterator to traverse the linked list
 	struct hand* iterator1 = (*src).card_list;
+	//initialize card transfer count
 	int count = 0;
+
+	//loop till the src has a particular card
 	while(search(src,rank) == 1){
-		if((*iterator1).top.rank[0] == rank){//loop till the src has a particular card
-			add_card(dest,&(iterator1->top));//add card to dest
-			remove_card(src,&(iterator1->top));//remove card from src
-			//add_card(dest,&(iterator1-top)); //Slight edge-case found by running remove before add
+		if((*iterator1).top.rank[0] == rank){
+			//add card to dest
+			add_card(dest,&(iterator1->top));
+			//remove card from src
+			remove_card(src,&(iterator1->top));
+			//increment count
 			count++;
 		}
-		iterator1 = iterator1->next;//next card/hand
+		//next card/hand
+		iterator1 = iterator1->next;
 	}
+
 	return count;
 }
 
@@ -163,8 +172,18 @@ int search(struct player* target,char rank){
 	return 1;
 }
 //Shaun Ghosh
-void clear_player_hand(struct player* target){
-	target->card_list = NULL;
+int reset_player(struct player* target){
+	int *ptr = &((*target).book);
+	while(ptr != NULL){
+		*ptr = '\0';
+		ptr++;
+	}
+	//free memory of the item
+	free((*target).card_list);
+	//change direction of the pointer to an empty space
+ 	(*target).card_list = NULL;
+ 	//verify if pointer points to NULL
+ 	return 0;
 }
 
 /*
