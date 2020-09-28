@@ -3,6 +3,7 @@
 #include "card.h"
 
 //Add card adds a card to the player's hand
+//Joseph Mitchell
 int add_card(struct player* target, struct card* new_card){
 	struct hand* temp;
 	temp = (struct hand*)malloc(sizeof(struct hand));
@@ -15,21 +16,26 @@ int add_card(struct player* target, struct card* new_card){
 
 	target->hand_size++;
 
+	check_add_book(target);
+
 	return 1;
 }
 //Removes a card from the players hand
+//Joseph Mitchell
 int remove_card(struct player* target, struct card* old_card){
 	struct hand* iterator = target->card_list;
 	struct hand* previous = NULL;
+
+
 	if(iterator == NULL) {return 0;}
-	while(iterator->top.suit != old_card->suit && iterator->top.rank[0] != old_card->rank[0] 
-		&& iterator->top.rank[1] != old_card->rank[1]){
+	while( ! ( (iterator->top.suit == old_card->suit)   &&   (iterator->top.rank[0] == old_card->rank[0]) ) ){
 		previous = iterator;
 		iterator = iterator->next;
 		if(iterator == NULL){
 			return 0;
 		}
 	}
+
 
 	if(previous != NULL){
 		previous->next = iterator->next;
@@ -39,78 +45,102 @@ int remove_card(struct player* target, struct card* old_card){
 
 	free(iterator);
 
+	target->hand_size--;
+
 	return 1;
 }
-/*
+//Joseph Mitchell
+void print_books(struct player* target){
+	int i;
+	for(i=0;i<=6;i++){
+		printf("%c",target->book[i]);
+	}
+}
+
 //Helper function to check_add_book
-//This will add the book to the player's book list, then it will check for gameover(Shaun)!
+//Joseph Mitchell
 int add_to_book(struct player* target,char rank){
 	int i;
 	for(i=0; i <= 6; i++){
-		if(target->book[i] == NULL){
+		if(target->book[i] == '\0'){
 			target->book[i] = rank; //Will be modified on print out!
+			return 1;
 		}
 	}
 }
-*/
+//Joseph Mitchell
+int count_rank_cards(struct player* target,char rank){
+	int i=0;
+	struct hand* iterator = target->card_list;
 
+	while(iterator != NULL){
+		if(iterator->top.rank[0] == rank){
+			i++;
+			//printf("%d\n",i);
+		}
+		iterator = iterator->next;
+	}
+
+	return i;
+}
+//Joseph Mitchell
 char check_add_book(struct player* target){
 	struct hand* iterator = target->card_list;
-	struct hand* temp = target->card_list;
 	int count;
 	if(iterator == NULL){ return 0; }
 	while(iterator != NULL){
-		char rank = iterator->top.rank[1];
-		printf("%c\n",rank);
-		count++;
-		iterator = iterator->next;
-		//Loop through the players hand to find all occurances of that rank!
-		while(temp != NULL){
-			if(temp->top.rank[1] == rank){
-				count++;
-			}
-			if(count == 4){
-				//Remove all cards of that rank from players hand!
-				//while(remove_card(target,rank) > 0){}
-				//Add rank to player's book
-				//add_to _book(target,rank);
-				return rank; //This will return the rank at the least significant position [if 0 outside main logic will produce book to be '10']
-			}
-			temp = temp->next;
+		char rank = iterator->top.rank[0];
+		int count = count_rank_cards(target,rank);
+		//printf("%d\n",count);
+		if(count == 4){
+			//remove all 4 suits from player's hand
+			//printf("I have made it here!");
+			//remove_all_rank(target,rank);
+
+			struct card card1,card2,card3,card4;
+			card1.suit='C';
+			card1.rank[0]=rank;
+			card2.suit='H';
+			card2.rank[0]=rank;
+			card3.suit='D';
+			card3.rank[0]=rank;
+			card4.suit='S';
+			card4.rank[0]=rank;
+
+			remove_card(target,&card1);
+			remove_card(target,&card2);
+			remove_card(target,&card3);
+			remove_card(target,&card4);
+
+
+			//remove_all_rank(target,rank);
+			add_to_book(target,rank);
+			return rank;
 		}
-		temp = target->card_list;
+
 		count=0;
+		iterator = iterator->next;
 	}
-	return ' ';//Space char will indicate no books!
+	return '\0';//null char will indicate no books!
 }
 
-int search(struct player* target,char rank){
-	struct hand* list = target->card_list;
-	while(list->top.rank[0] != rank){
-		list = list->next; //Next item
-		if(list == NULL){
-			return 0;
-		}
-	}
-	return 1;
-}
-
-
+//Shaun Ghosh
 int transfer_cards(struct player* src, struct player* dest, char rank){
 	struct hand* iterator1 = (*src).card_list;
-	int count=0;
-		while(search(src, rank) == 1){ //loop till the src has a particular card
-			if((*iterator1).top.rank[0] == rank){ //check if the card exists in src card list
-				add_card(dest, iterator1->top); // add card to dest
-				remove_card(src, &(iterator1->top)); // remove card from src
-				count++;
-			}
-			iterator1 = iterator1->next;  //next card/hand
+	int count = 0;
+	while(search(src,rank) == 1){
+		if((*iterator1).top.rank[0] == rank){//loop till the src has a particular card
+			add_card(dest,&(iterator1->top));//add card to dest
+			remove_card(src,&(iterator1->top));//remove card from src
+			//add_card(dest,&(iterator1-top)); //Slight edge-case found by running remove before add
+			count++;
 		}
-	return count;	
+		iterator1 = iterator1->next;//next card/hand
+	}
+	return count;
 }
 
-
+//Shaun Ghosh
 int gameover(struct player* target){
 	if((*target).book[6] != '\0'){
 		return 1;
@@ -119,61 +149,62 @@ int gameover(struct player* target){
 		return 0;
 	}
 }
-/*
-void print_hand(struct player* target){
-	struct hand* temp;
-	int i = 1;
-
-	temp = target->card_list;
-	while(temp != NULL){
-		printf("%c%c", temp->top.suit, temp->top.rank[1]);
-		temp = temp->next;
-		i++;
+//Shaun Ghosh
+int search(struct player* target,char rank){
+	struct hand* list = target->card_list;
+	if(list == NULL){return 0;}
+	while(list->top.rank[0] != rank){
+		list = list->next; //Next item
+		if(list == NULL){
+			return 0;
+		}
 	}
 
+	return 1;
 }
-*/
+//Shaun Ghosh
+void clear_player_hand(struct player* target){
+	target->card_list = NULL;
+}
 
-int main(int argc, char *argv[]){
-	//These will be declared in an initialization function!
-	//The parameters of these pointers need to be passed to the function prope
-
-	//print_list();
 /*
-	struct card* new_card1;
-	struct card new_card;
+int main(){
+	//These will be declared in an initialization function!
+	//The parameters of these pointers need to be passed to the function properly
+
+	struct card new_card,new_card1,new_card2,new_card3,new_card4;
+	//Should remove all four of these cards!!!
 	new_card.suit='D';
 	new_card.rank[1]='6';
-	new_card1 = &new_card;
-	struct player* user1 = &user;
+	new_card1.suit='H';
+	new_card1.rank[1]='6';
+	new_card2.suit='C';
+	new_card2.rank[1]='6';
+	new_card3.suit='S';
+	new_card3.rank[1]='6';
 
-	add_card(user1,new_card1);
-	add_card(user1,new_card1);
-	add_card(user1,new_card1);
-	add_card(user1,new_card1);
+	new_card4.suit='C';
+	new_card4.rank[1]='9';
 
-	//printf("%d",remove_card(user1,new_card1));
+	add_card(&user,&new_card);
+	add_card(&user,&new_card1);
+	add_card(&user,&new_card2);
+	add_card(&user,&new_card3);
 
-	//print_list();
+	add_card(&user,&new_card4);
 
-	printf("\n");
+	struct card cardz;
+	cardz.suit='S';
+	cardz.rank[1]='6';
 
-	char books_ = check_add_book(user1);
+	printf("Player's Hand: ");
+	print_hand(&user);
 
-	if(' ' == books_){ 
-		printf("No books!");
-	}else{
-		printf("%c",books_);
-	}
-*/
-	struct player Paige;
-	
-	struct card PW;
-	PW.suit = 'C';
-	PW.rank[0] = '2';
-	add_card(&Paige, &PW);
-	printf("%d",search(&Paige,'3'));             
-	
+	printf("\nPlayer's Books: \n");
+
+	print_books(&user);
+
+	return 0;
 
 }
-
+*/
