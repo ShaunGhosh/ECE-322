@@ -24,20 +24,36 @@ int main(int args, char* argv[])
 
 	shuffle();//initialize deck and shuffle the deck
 
-	printf("Deck card number: %d", deck_instance.top_card);
+	struct card card1,card2,card3,card4,card5;
+
+	char rank = '5';
+
+	card1.suit='C';
+	card1.rank[0]=rank;
+	card2.suit='H';
+	card2.rank[0]=rank;
+	card3.suit='D';
+	card3.rank[0]=rank;
+	card4.suit='S';
+	card4.rank[0]=rank;
+
+	card5.suit='D';
+	card5.rank[0]='7';
+
+	add_card(&user,&card1);
+	//add_card(&user,&card2);
+	//add_card(&user,&card5);
+	//add_card(&user,&card3);
+	//add_card(&user,&card4);
+
+	printf("\nUser hand (%d cards) : ",user.hand_size);
+	print_hand(&user); //Should not have any cards of the book!
+	printf("\nUser Books: ");
+	print_books(&user);
 
 
-	struct player* user1 = &user;
-	struct player* computer1 = &computer;
+	printf("Search?: %d",search(&user,'2'));
 
-
-	deal_player_cards(user1);
-	deal_player_cards(computer1);
-
-	printf("Players hand: ");
-	print_hand(user1);
-	printf("\n\nComputer's hand: ");
-	print_hand(computer1);
 	//Joe Mitchell [END]
 	//call user play function
 }

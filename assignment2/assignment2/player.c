@@ -84,17 +84,32 @@ char check_add_book(struct player* target){
 	return ' ';//Space char will indicate no books!
 }
 
-int search(struct player* target, char rank){
-	struct hand* iterator = (*target).card_list;
-	if(iterator == NULL) { return 0;}
-	while ((*iterator).top.rank[1] != rank){
-		iterator = (*iterator).next;
-		if (iterator == NULL){return 0;}
+int search(struct player* target,char rank){
+	struct hand* list = target->card_list;
+	while(list->top.rank[0] != rank){
+		list = list->next; //Next item
+		if(list == NULL){
+			return 0;
 		}
-	free(iterator);	
+	}
 	return 1;
-	
 }
+
+
+int transfer_cards(struct player* src, struct player* dest, char rank){
+	struct hand* iterator1 = (*src).card_list;
+	int count=0;
+		while(search(src, rank) == 1){ //loop till the src has a particular card
+			if((*iterator1).top.rank[0] == rank){ //check if the card exists in src card list
+				add_card(dest, iterator1->top); // add card to dest
+				remove_card(src, &(iterator1->top)); // remove card from src
+				count++;
+			}
+			iterator1 = iterator1->next;  //next card/hand
+		}
+	return count;	
+}
+
 
 int gameover(struct player* target){
 	if((*target).book[6] != '\0'){
@@ -155,7 +170,7 @@ int main(int argc, char *argv[]){
 	
 	struct card PW;
 	PW.suit = 'C';
-	PW.rank[1] = '2';
+	PW.rank[0] = '2';
 	add_card(&Paige, &PW);
 	printf("%d",search(&Paige,'3'));             
 	

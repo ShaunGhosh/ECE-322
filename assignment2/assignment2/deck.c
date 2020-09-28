@@ -7,17 +7,16 @@
 
 void init(){
 	//Use integer arrays to represent chars
-	//struct deck new_deck;
-	//deck_instance = new_deck;
-	int suit[] = {67,83,72,68};
-	int rank[] = {50,51,52,53,54,55,56,57,74,81,75,65}; //Will handle rand 10 as last element
+	deck_instance.top_card = 0; //Make sure the top card of the deck is the 0th element!
+	int suit[] = {67,83,72,68}; //Ascii values for 'C' 'H' 'S' 'D' [Not in that order]
+	int rank[] = {50,51,52,53,54,55,56,57,74,81,75,65}; //Ascii values for 2-9 and 'J' 'Q' 'K' 'A'  10 is added at the end!
 
-	int size = (sizeof(deck_instance.list) / sizeof(deck_instance.list[0]) );
-	int deck_size = 0;
+	int size = (sizeof(deck_instance.list) / sizeof(deck_instance.list[0]) ); //Find size of the deck
+	int deck_size = 0; 
 	int i,j;
 	for(i = 0; i <= 3; i++){//Loop through the suits
 		for(j = 0; j <= (size/4)-1; j++){//Loop through the ranks
-			deck_instance.list[deck_size].suit=suit[i];
+			deck_instance.list[deck_size].suit=suit[i]; //Access the deck using deck_instance header file attribute
 			deck_instance.list[deck_size].rank[1]=' ';
 			if(j==12){//Rank needs to be 10
 				deck_instance.list[deck_size].rank[0]=48;
@@ -40,7 +39,7 @@ void display_deck(){
 }
 
 int shuffle(){
-	init();
+	init();//initialize the deck's 52 cards
 	srand(time(0)); //Set random seed based on current time
 
 	int deck_size = ( sizeof(deck_instance.list) / sizeof(deck_instance.list[0]) );
@@ -52,7 +51,7 @@ int shuffle(){
 
 		struct card temp1 = deck_instance.list[s1], temp2 = deck_instance.list[s2];
 
-		deck_instance.list[s2] = temp1;
+		deck_instance.list[s2] = temp1; //Swap the cards in the deck for s1 vs s2 randomly!
 		deck_instance.list[s1] = temp2;
 	}
 	return 1;
@@ -75,8 +74,6 @@ struct card* next_card(){
 	struct deck* top_card = &deck_instance;
 
 	struct card* top = &(top_card->list[deck_instance.top_card]);
-
-	//printf("%c%c",top->suit,top->rank[0]);
 
 	deck_instance.top_card++;
 	return top;
