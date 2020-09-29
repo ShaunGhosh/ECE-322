@@ -180,7 +180,7 @@ int reset_player(struct player* target){
 
 char computer_play(struct player* target){
 	srand(time(0));
-	Struct hand* iterator1 = (*target).card_list;
+	struct hand* iterator1 = (*target).card_list;
 	int count = 0;
 	while (*iterator != NULL){
 		count++;
@@ -188,13 +188,16 @@ char computer_play(struct player* target){
 	}
 	int num = rand() % count;
 	int i;
-	Struct hand* iterator2 = (*target).card_list;
+	struct hand* iterator2 = (*target).card_list;
 	for(i=0; i<=num; i++){
 		iterator2 = (*iterator2).next;
 	}
 	return (*iterator2).top.rank[1];
 }
 
+char user_play(struct player* target){
+
+}
 /*
 void clear_player_hand(struct player* target){
 	target->card_list = NULL;//This is the reset of the player's hand
