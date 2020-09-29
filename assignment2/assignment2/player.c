@@ -126,26 +126,17 @@ char check_add_book(struct player* target){
 
 //Shaun Ghosh
 int transfer_cards(struct player* src, struct player* dest, char rank){
-
-	//iterator to traverse the linked list
 	struct hand* iterator1 = (*src).card_list;
-	//initialize card transfer count
 	int count = 0;
-
-	//loop till the src has a particular card
 	while(search(src,rank) == 1){
-		if((*iterator1).top.rank[0] == rank){
-			//add card to dest
-			add_card(dest,&(iterator1->top));
-			//remove card from src
-			remove_card(src,&(iterator1->top));
-			//increment count
+		if((*iterator1).top.rank[0] == rank){//loop till the src has a particular card
+			add_card(dest,&(iterator1->top));//add card to dest
+			remove_card(src,&(iterator1->top));//remove card from src
+			//add_card(dest,&(iterator1-top)); //Slight edge-case found by running remove before add
 			count++;
 		}
-		//next card/hand
-		iterator1 = iterator1->next;
+		iterator1 = iterator1->next;//next card/hand
 	}
-
 	return count;
 }
 
@@ -173,19 +164,43 @@ int search(struct player* target,char rank){
 }
 //Shaun Ghosh
 int reset_player(struct player* target){
-	int *ptr = &((*target).book);
-	while(ptr != NULL){
-		*ptr = '\0';
-		ptr++;
+	//1) Empty the player's hand
+	target->card_list = NULL;
+	free(target->card_list);
+	//2) Empty the player's book
+	int i;
+	for(i=0;i<=6;i++){
+		target->book[i] = '\0';
 	}
-	//free memory of the item
-	free((*target).card_list);
-	//change direction of the pointer to an empty space
- 	(*target).card_list = NULL;
- 	//verify if pointer points to NULL
- 	return 0;
+	//3) Set hand_size to 0
+	target->hand_size = 0;
+
+	return 0;
 }
 
+char computer_play(struct player* target){
+	srand(time(0));
+	Struct hand* iterator1 = (*target).card_list;
+	int count = 0;
+	while (*iterator != NULL){
+		count++;
+		iterator = (*iterator).next;
+	}
+	int num = rand() % count;
+	int i;
+	Struct hand* iterator2 = (*target).card_list;
+	for(i=0; i<=num; i++){
+		iterator2 = (*iterator2).next;
+	}
+	return (*iterator2).top.rank[1];
+}
+
+/*
+void clear_player_hand(struct player* target){
+	target->card_list = NULL;//This is the reset of the player's hand
+	free(target->card_list);//This is freeing the reset of the player's hand
+}
+*/
 /*
 int main(){
 	//These will be declared in an initialization function!

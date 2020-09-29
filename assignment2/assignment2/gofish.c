@@ -20,47 +20,51 @@ void print_hand(struct player* target){
 int main(int args, char* argv[]) 
 {
 	//Joe Mitchell [START]
-	printf("Shuffling deck...\n\n");
+	printf("Shuffling deck...\n\n"); //1) print Shuffling deck...
 
-	shuffle();//initialize deck and shuffle the deck
+	shuffle();//2) shuffle the deck initialize deck and shuffle the deck
 
-	struct card card1,card2,card3,card4,card5;
+	deal_player_cards(&user);//3) Deal user cards
 
-	char rank = '5';
+	deal_player_cards(&computer);//4) Deal computer cards
 
-	card1.suit='C';
-	card1.rank[0]=rank;
-	card2.suit='H';
-	card2.rank[0]=rank;
-	card3.suit='D';
-	card3.rank[0]=rank;
-	card4.suit='S';
-	card4.rank[0]=rank;
+	//Scenario #1 : Player has to draw a card
 
-	card5.suit='D';
-	card5.rank[0]='7';
+	//5) print Player 1's Hand - ...
+	//6) print Player 1's Book - ...
+	//7) print Player 2's Book - ...
+	//8) print Player x's turn, enter a Rank: (2,3,4,5,6,7,8,9,10,J,Q,K,A)
+	//9) print   -Player (1-x) has no Rank's
+	//10)print   -Go Fish, Player x draws blah
+	//11)print   -Player (1-x)'s turn
 
-	add_card(&user,&card1);
-	//add_card(&user,&card2);
-	//add_card(&user,&card5);
-	//add_card(&user,&card3);
-	//add_card(&user,&card4);
+	//Scenario #2 : Player claims cards from opponent
 
-	printf("\nUser hand (%d cards) : ",user.hand_size);
-	print_hand(&user); //Should not have any cards of the book!
-	printf("\nUser Books: ");
-	print_books(&user);
+	//5) print Player 1's Hand - ...
+	//6) print Player 1's Book - ...
+	//7) print Player 2's Book - ...
+	//8) print Player x's turn, enter a Rank: (2,3,4,5,6,7,8,9,10,J,Q,K,A)
+	//9) print   -Player (1-x) has (*Rank cards)
+	//10)print   -Player x has (*Rank cards)
+	//11)print   -Player x has books Rank
+	//12)print   -Player x gets another turn
 
+	//Scenario #3 : Player does not have at least one card from Rank to play
+	//print Player x's turn, enter a Rank: (2,3,4,5,6,7,8,9,10,J,Q,K,A)
+	//print Error - must have at least one card from rank to play
 
-	printf("Search?: %d",search(&user,'2'));
+	//Scenario #4 : Player has won the game!
+	//5) print Player 1's Hand - (Blank)  These must have been reset on gameover
+	//6) print Player 1's Book - 3 2 J A 6 Q 8
+	//7) print Player 2's Book - 9 5 10 4 5 K
+	//8) print Player 1 Wins! 7-6         (Number for winner (always 7)  -  Loser (less than 7) )
+	//9) print 
+	//10)print Do you want to play again [Y/N]:N
+	//11)print Exiting.
+
+	//All of these scenarios will be broken up into two functions: user_play and computer_play
+	//Their format will be similar to that of above print scenarios
 
 	//Joe Mitchell [END]
 	//call user play function
-
-	printf("resetting player: %d", reset_player(&user));
-	printf("new user's hand after resetting: ");
-	print_hand(&user);
-	printf("\nUser Books after resetting: ");
-	print_books(&user);
-
 }
