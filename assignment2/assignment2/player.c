@@ -98,7 +98,6 @@ char check_add_book(struct player* target){
 			//remove all 4 suits from player's hand
 			//printf("I have made it here!");
 			//remove_all_rank(target,rank);
-
 			struct card card1,card2,card3,card4;
 			card1.suit='C';
 			card1.rank[0]=rank;
@@ -114,12 +113,10 @@ char check_add_book(struct player* target){
 			remove_card(target,&card3);
 			remove_card(target,&card4);
 
-
 			//remove_all_rank(target,rank);
 			add_to_book(target,rank);
 			return rank;
 		}
-
 		count=0;
 		iterator = iterator->next;
 	}
@@ -198,7 +195,14 @@ char computer_play(struct player* target){
 }
 
 char user_play(struct player* target){
-
+	char input;
+	printf("Your Play: ")
+	scanf(" %c", &input);
+	while(search(target, input) != 1){
+		printf("Card not present in hand. Please reselect your play: ");
+		scanf(" %c", &input);
+	}	
+	return input;
 }
 /*
 void clear_player_hand(struct player* target){
