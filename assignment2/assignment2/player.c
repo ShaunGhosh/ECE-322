@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "player.h"
 #include "card.h"
+#include "time.h"
+#include "stdlib.h"
 
 //Add card adds a card to the player's hand
 //Joseph Mitchell
@@ -182,17 +184,17 @@ char computer_play(struct player* target){
 	srand(time(0));
 	struct hand* iterator1 = (*target).card_list;
 	int count = 0;
-	while (*iterator != NULL){
+	while (iterator1 != NULL){
 		count++;
-		iterator = (*iterator).next;
+		iterator1 = (*iterator1).next;
 	}
 	int num = rand() % count;
 	int i;
 	struct hand* iterator2 = (*target).card_list;
-	for(i=0; i<=num; i++){
+	for(i=0; i<num; i++){
 		iterator2 = (*iterator2).next;
 	}
-	return (*iterator2).top.rank[1];
+	return (*iterator2).top.rank[0];
 }
 
 char user_play(struct player* target){
